@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Thăng Long Student</string>
+    <string name="university_name">Trường Đại Học Thăng Long</string>
+    <string name="university_short">ĐH Thăng Long</string>
+
+    <!-- Login -->
+    <string name="login_title">Đăng nhập</string>
+    <string name="student_id_hint">Mã sinh viên (VD: A12345)</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_admin_login">Đăng nhập Admin</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_search">Tìm kiếm</string>
+    <string name="nav_scores">Điểm thi</string>
+    <string name="nav_profile">Hồ sơ</string>
+
+    <!-- Student Info -->
+    <string name="student_info_title">Thông tin sinh viên</string>
+    <string name="student_id_label">Mã sinh viên</string>
+    <string name="student_name_label">Họ và tên</string>
+    <string name="student_dob_label">Ngày sinh</string>
+    <string name="student_class_label">Lớp</string>
+    <string name="student_major_label">Ngành học</string>
+    <string name="student_email_label">Email</string>
+    <string name="student_phone_label">Số điện thoại</string>
+    <string name="student_status_label">Trạng thái</string>
+    <string name="student_status_active">Đang học</string>
+    <string name="student_status_inactive">Đã tốt nghiệp</string>
+
+    <!-- Scores -->
+    <string name="scores_title">Bảng điểm</string>
+    <string name="subject_code">Mã môn</string>
+    <string name="subject_name">Tên môn học</string>
+    <string name="score_midterm">Giữa kỳ</string>
+    <string name="score_final">Cuối kỳ</string>
+    <string name="score_gpa">Điểm TB</string>
+    <string name="score_grade">Xếp loại</string>
+    <string name="semester_label">Học kỳ</string>
+    <string name="gpa_label">Điểm TB tích lũy</string>
+
+    <!-- Search -->
+    <string name="search_title">Tìm kiếm sinh viên</string>
+    <string name="search_hint">Nhập mã SV hoặc tên...</string>
+    <string name="search_btn">Tìm kiếm</string>
+    <string name="search_empty">Không tìm thấy sinh viên</string>
+    <string name="search_result">Kết quả tìm kiếm</string>
+
+    <!-- Admin -->
+    <string name="admin_title">Quản trị viên</string>
+    <string name="admin_student_mgmt">Quản lý sinh viên</string>
+    <string name="admin_score_mgmt">Quản lý điểm</string>
+    <string name="btn_add">Thêm mới</string>
+    <string name="btn_edit">Chỉnh sửa</string>
+    <string name="btn_delete">Xóa</string>
+    <string name="btn_save">Lưu</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="btn_back">Quay lại</string>
+    <string name="confirm_delete">Xác nhận xóa</string>
+    <string name="confirm_delete_msg">Bạn có chắc muốn xóa thông tin này?</string>
+    <string name="btn_confirm">Xác nhận</string>
+
+    <!-- Messages -->
+    <string name="loading">Đang tải...</string>
+    <string name="error_network">Lỗi kết nối mạng</string>
+    <string name="error_not_found">Không tìm thấy dữ liệu</string>
+    <string name="success_save">Lưu thành công</string>
+    <string name="success_delete">Xóa thành công</string>
+    <string name="logout">Đăng xuất</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

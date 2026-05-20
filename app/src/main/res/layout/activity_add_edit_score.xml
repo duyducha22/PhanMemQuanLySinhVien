@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tl_primary_dark">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_add_score"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/tl_primary_dark"
+            app:title="Nhập điểm"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:navigationIconTint="@color/white"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Student ID -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SINH VIÊN"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/tl_primary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_score_student_id"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mã sinh viên (VD: A12345)"
+                        android:layout_marginBottom="16dp"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@android:drawable/ic_menu_search"
+                        app:endIconTint="@color/tl_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_score_student_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:textAllCaps="true"
+                            android:maxLength="6"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Student name preview -->
+                    <TextView
+                        android:id="@+id/tv_score_student_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="@color/tl_primary"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:background="@color/gray_100"
+                        android:padding="12dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Subject Info -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MÔN HỌC"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/tl_primary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Subject code -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_subject_code"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/subject_code"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_subject_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:textAllCaps="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Subject name -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_subject_name"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/subject_name"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_subject_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapSentences"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Credits -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_credits"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Số tín chỉ"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_credits"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="1"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Semester -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_semester"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/semester_label"
+                        app:helperText="VD: HK1 2023-2024">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_semester"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Scores Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ĐIỂM SỐ"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/tl_primary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Midterm score -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_midterm"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/score_midterm"
+                        android:layout_marginBottom="16dp"
+                        app:helperText="Thang điểm 10">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_midterm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLength="4"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Final score -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_final"
+                        style="@style/TL.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/score_final"
+                        android:layout_marginBottom="16dp"
+                        app:helperText="Thang điểm 10">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_final"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLength="4"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Auto-calculated average -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/gray_100"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Điểm trung bình"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_secondary"/>
+
+                        <TextView
+                            android:id="@+id/tv_calculated_avg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/tl_primary"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Buttons -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_score"
+                style="@style/TL.Button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/btn_save"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel_score"
+                style="@style/TL.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/btn_cancel"
+                android:layout_marginBottom="32dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
