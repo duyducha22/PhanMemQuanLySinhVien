@@ -9,16 +9,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.btl.R;
 import com.example.btl.models.Score;
+import com.example.btl.network.ApiResponse;
+import com.example.btl.network.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddEditScoreActivity extends AppCompatActivity {
 
     public static final String EXTRA_SCORE_ID = "edit_score_id";
 
     private boolean isEditMode = false;
-    private int     editScoreId = -1;
+    private String  editScoreId = null; // Đổi sang String cho khớp MongoDB
 
     private TextInputLayout   tilStudentId, tilSubjectCode, tilSubjectName;
     private TextInputLayout   tilCredits, tilSemester, tilMidterm, tilFinal;
@@ -31,15 +37,16 @@ public class AddEditScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_score);
 
-        editScoreId = getIntent().getIntExtra(EXTRA_SCORE_ID, -1);
-        isEditMode  = (editScoreId != -1);
+        // Lấy ID điểm truyền sang dạng String
+        editScoreId = getIntent().getStringExtra(EXTRA_SCORE_ID);
+        isEditMode  = (editScoreId != null && !editScoreId.isEmpty());
 
         Toolbar toolbar = findViewById(R.id.toolbar_add_score);
         setSupportActionBar(toolbar);
         toolbar.setTitle(isEditMode ? "Chỉnh sửa điểm" : "Nhập điểm");
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Ánh xạ
+        // Ánh xạ View
         tilStudentId   = findViewById(R.id.til_score_student_id);
         tilSubjectCode = findViewById(R.id.til_subject_code);
         tilSubjectName = findViewById(R.id.til_subject_name);
@@ -70,8 +77,8 @@ public class AddEditScoreActivity extends AppCompatActivity {
         etMidterm.addTextChangedListener(scoreWatcher);
         etFinal.addTextChangedListener(scoreWatcher);
 
-        // Tìm sinh viên khi nhập mã
-        tilStudentId.setEndIconOnClickListener(v -> lookupStudent());
+        // (Chức năng tra cứu tên sinh viên sẽ hoàn thiện sau nếu cần)
+        tilStudentId.setEndIconOnClickListener(v -> Toast.makeText(this, "Tra cứu sinh viên...", Toast.LENGTH_SHORT).show());
 
         if (isEditMode) loadScoreData(editScoreId);
 
@@ -93,28 +100,8 @@ public class AddEditScoreActivity extends AppCompatActivity {
         }
     }
 
-    private void lookupStudent() {
-        String id = etStudentId.getText() != null
-                ? etStudentId.getText().toString().trim().toUpperCase() : "";
-        if (id.isEmpty()) return;
-
-        // TODO: Gọi API kiểm tra sinh viên tồn tại
-        // RetrofitClient.getApiService().getStudentById(id).enqueue(...)
-
-        // ---- Mẫu test ----
-        tvStudentName.setText("Nguyễn Văn An — CNTT1");
-        tvStudentName.setVisibility(android.view.View.VISIBLE);
-    }
-
-    private void loadScoreData(int scoreId) {
-        // TODO: Gọi API lấy điểm theo scoreId
-        etStudentId.setText("A12345");
-        etSubjectCode.setText("CNTT101");
-        etSubjectName.setText("Lập trình hướng đối tượng");
-        etCredits.setText("3");
-        etSemester.setText("HK1 2023-2024");
-        etMidterm.setText("8.5");
-        etFinal.setText("9.0");
+    private void loadScoreData(String scoreId) {
+        // Tạm thời để trống, tí nữa anh em mình làm danh sách sẽ test cập nhật sau
     }
 
     private void validateAndSave() {
@@ -125,16 +112,11 @@ public class AddEditScoreActivity extends AppCompatActivity {
         String finalStr   = etFinal.getText()        != null ? etFinal.getText().toString().trim() : "";
 
         boolean valid = true;
-        if (studentId.isEmpty())  { tilStudentId.setError("Nhập mã SV");          valid = false; }
-        else tilStudentId.setError(null);
-        if (subCode.isEmpty())    { tilSubjectCode.setError("Nhập mã môn");         valid = false; }
-        else tilSubjectCode.setError(null);
-        if (subName.isEmpty())    { tilSubjectName.setError("Nhập tên môn");        valid = false; }
-        else tilSubjectName.setError(null);
-        if (midStr.isEmpty())     { tilMidterm.setError("Nhập điểm giữa kỳ");       valid = false; }
-        else tilMidterm.setError(null);
-        if (finalStr.isEmpty())   { tilFinal.setError("Nhập điểm cuối kỳ");         valid = false; }
-        else tilFinal.setError(null);
+        if (studentId.isEmpty())  { tilStudentId.setError("Nhập mã SV");          valid = false; } else tilStudentId.setError(null);
+        if (subCode.isEmpty())    { tilSubjectCode.setError("Nhập mã môn");         valid = false; } else tilSubjectCode.setError(null);
+        if (subName.isEmpty())    { tilSubjectName.setError("Nhập tên môn");        valid = false; } else tilSubjectName.setError(null);
+        if (midStr.isEmpty())     { tilMidterm.setError("Nhập điểm giữa kỳ");       valid = false; } else tilMidterm.setError(null);
+        if (finalStr.isEmpty())   { tilFinal.setError("Nhập điểm cuối kỳ");         valid = false; } else tilFinal.setError(null);
         if (!valid) return;
 
         double mid = Double.parseDouble(midStr);
@@ -154,11 +136,30 @@ public class AddEditScoreActivity extends AppCompatActivity {
         try { score.setCredits(Integer.parseInt(etCredits.getText().toString().trim())); }
         catch (NumberFormatException e) { score.setCredits(0); }
 
-        // TODO: Gọi API
-        // if (isEditMode) RetrofitClient.getApiService().updateScore(editScoreId, score).enqueue(...)
-        // else            RetrofitClient.getApiService().createScore(score).enqueue(...)
-
-        Toast.makeText(this, "Đã lưu điểm thành công!", Toast.LENGTH_SHORT).show();
-        finish();
+        if (isEditMode) {
+            RetrofitClient.getApiService().updateScore(editScoreId, score).enqueue(new Callback<ApiResponse<Score>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Score>> call, Response<ApiResponse<Score>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        Toast.makeText(AddEditScoreActivity.this, "Cập nhật điểm thành công!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else { Toast.makeText(AddEditScoreActivity.this, "Lỗi cập nhật", Toast.LENGTH_SHORT).show(); }
+                }
+                @Override
+                public void onFailure(Call<ApiResponse<Score>> call, Throwable t) {}
+            });
+        } else {
+            RetrofitClient.getApiService().createScore(score).enqueue(new Callback<ApiResponse<Score>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Score>> call, Response<ApiResponse<Score>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        Toast.makeText(AddEditScoreActivity.this, "Đã lưu điểm thành công!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else { Toast.makeText(AddEditScoreActivity.this, "Lỗi khi lưu điểm", Toast.LENGTH_SHORT).show(); }
+                }
+                @Override
+                public void onFailure(Call<ApiResponse<Score>> call, Throwable t) {}
+            });
+        }
     }
 }

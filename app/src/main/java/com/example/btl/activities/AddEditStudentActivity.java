@@ -2,15 +2,24 @@ package com.example.btl.activities;
 
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import com.example.btl.R;
+import com.example.btl.network.RetrofitClient;
+import com.example.btl.network.ApiResponse;
 import com.example.btl.models.Student;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddEditStudentActivity extends AppCompatActivity {
 
@@ -20,7 +29,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
     private boolean isEditMode = false;
     private String  editStudentId;
 
-    private TextInputLayout   tilId, tilName, tilDob, tilEmail, tilPhone, tilAddress;
+    private TextInputLayout tilId, tilName, tilDob, tilEmail, tilPhone, tilAddress;
     private TextInputLayout   tilClass, tilMajor, tilYear;
     private TextInputEditText etId, etName, etDob, etEmail, etPhone, etAddress;
     private TextInputEditText etClass, etMajor, etYear;
@@ -85,21 +94,48 @@ public class AddEditStudentActivity extends AppCompatActivity {
     }
 
     private void loadStudentData(String id) {
-        // TODO: Gọi API lấy thông tin sinh viên theo id
-        // RetrofitClient.getApiService().getStudentById(id).enqueue(...)
-        // Sau đó điền vào các EditText
+        // Gọi API Lấy thông tin chi tiết của sinh viên theo ID
+        com.example.btl.network.RetrofitClient.getApiService().getStudentById(id).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    com.example.btl.models.Student s = response.body().getData();
 
-        // ---- Dữ liệu mẫu để test ----
-        etId.setText(id);
-        etId.setEnabled(false); // Không cho sửa mã SV khi edit
-        etName.setText("Nguyễn Văn An");
-        etDob.setText("01/01/2000");
-        etEmail.setText("a12345@thanglong.edu.vn");
-        etPhone.setText("0901234567");
-        etAddress.setText("Hà Nội");
-        etClass.setText("CNTT1");
-        etMajor.setText("Công nghệ thông tin");
-        etYear.setText("2022");
+                    // Điền dữ liệu thật vào các ô nhập liệu
+                    etId.setText(s.getStudentId());
+                    etId.setEnabled(false); // Đã là mã sinh viên thì khóa lại không cho sửa
+
+                    etName.setText(s.getFullName());
+                    etDob.setText(s.getDob());
+                    etEmail.setText(s.getEmail());
+                    etPhone.setText(s.getPhone());
+                    etAddress.setText(s.getAddress());
+                    etClass.setText(s.getClassName());
+                    etMajor.setText(s.getMajor());
+                    etYear.setText(String.valueOf(s.getEnrollmentYear()));
+
+                    // Tick đúng giới tính
+                    if ("Nữ".equalsIgnoreCase(s.getGender())) {
+                        chipGender.check(R.id.chip_female);
+                    }
+
+                    // Tick đúng trạng thái học tập
+                    if ("Tốt nghiệp".equalsIgnoreCase(s.getStatus())) {
+                        chipStatus.check(R.id.chip_graduated);
+                    } else if ("Đình chỉ".equalsIgnoreCase(s.getStatus())) {
+                        chipStatus.check(R.id.chip_suspended);
+                    }
+
+                } else {
+                    android.widget.Toast.makeText(AddEditStudentActivity.this, "Không lấy được dữ liệu sinh viên!", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {
+                android.widget.Toast.makeText(AddEditStudentActivity.this, "Lỗi kết nối: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void validateAndSave() {
@@ -110,7 +146,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
         String phone   = etPhone.getText()   != null ? etPhone.getText().toString().trim() : "";
         String cls     = etClass.getText()   != null ? etClass.getText().toString().trim() : "";
         String major   = etMajor.getText()   != null ? etMajor.getText().toString().trim() : "";
-        String year    = etYear.getText()    != null ? etYear.getText().toString().trim() : "";
+        String yearStr = etYear.getText()    != null ? etYear.getText().toString().trim() : "0";
 
         boolean valid = true;
 
@@ -128,33 +164,66 @@ public class AddEditStudentActivity extends AppCompatActivity {
 
         if (!valid) return;
 
-        // Tạo object Student
-        Student student = new Student();
+        int year = 0;
+        try { year = Integer.parseInt(yearStr); } catch (NumberFormatException ignored) {}
+
+        // KHỞI TẠO BIẾN STUDENT Ở ĐÂY
+        com.example.btl.models.Student student = new com.example.btl.models.Student();
         student.setStudentId(isEditMode ? editStudentId : id);
         student.setFullName(name);
-        student.setDateOfBirth(dob);
+        student.setDob(dob);
         student.setEmail(email);
         student.setPhone(phone);
         student.setAddress(etAddress.getText() != null ? etAddress.getText().toString().trim() : "");
         student.setClassName(cls);
         student.setMajor(major);
-        student.setAcademicYear(year);
+        student.setEnrollmentYear(year);
 
-        // Giới tính từ chip
         int genderChipId = chipGender.getCheckedChipId();
         student.setGender(genderChipId == R.id.chip_female ? "Nữ" : "Nam");
 
-        // Trạng thái từ chip
         int statusChipId = chipStatus.getCheckedChipId();
-        if      (statusChipId == R.id.chip_graduated)  student.setStatus("graduated");
-        else if (statusChipId == R.id.chip_suspended)  student.setStatus("suspended");
-        else                                            student.setStatus("active");
+        if      (statusChipId == R.id.chip_graduated)  student.setStatus("Tốt nghiệp");
+        else if (statusChipId == R.id.chip_suspended)  student.setStatus("Đình chỉ");
+        else                                            student.setStatus("Đang học");
 
-        // TODO: Gọi API
-        // if (isEditMode) RetrofitClient.getApiService().updateStudent(editStudentId, student).enqueue(...)
-        // else            RetrofitClient.getApiService().createStudent(student).enqueue(...)
+        // GỌI API THÊM/SỬA SINH VIÊN
+        if (isEditMode) {
+            // CẬP NHẬT (PUT)
+            com.example.btl.network.RetrofitClient.getApiService().updateStudent(editStudentId, student).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        android.widget.Toast.makeText(AddEditStudentActivity.this, "Cập nhật thành công!", android.widget.Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        android.widget.Toast.makeText(AddEditStudentActivity.this, "Lỗi cập nhật", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        Toast.makeText(this, isEditMode ? "Đã cập nhật!" : "Đã thêm sinh viên!", Toast.LENGTH_SHORT).show();
-        finish();
+                @Override
+                public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {
+                    android.widget.Toast.makeText(AddEditStudentActivity.this, "Lỗi mạng: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // THÊM MỚI (POST)
+            com.example.btl.network.RetrofitClient.getApiService().addStudent(student).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        android.widget.Toast.makeText(AddEditStudentActivity.this, "Đã thêm sinh viên lên MongoDB!", android.widget.Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        android.widget.Toast.makeText(AddEditStudentActivity.this, "Lỗi: Không thể thêm sinh viên", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {
+                    android.widget.Toast.makeText(AddEditStudentActivity.this, "Lỗi mạng: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 }

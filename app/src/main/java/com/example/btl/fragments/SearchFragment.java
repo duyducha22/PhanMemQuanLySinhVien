@@ -85,32 +85,24 @@ public class SearchFragment extends Fragment {
         rvResults.setVisibility(View.GONE);
         layoutEmpty.setVisibility(View.GONE);
 
-        // TODO: Gọi API tìm kiếm
-        // RetrofitClient.getApiService()
-        //     .searchStudents(keyword)
-        //     .enqueue(new Callback<List<Student>>() {
-        //         @Override public void onResponse(Call<List<Student>> call,
-        //                 Response<List<Student>> response) {
-        //             progressBar.setVisibility(View.GONE);
-        //             List<Student> results = response.body();
-        //             showResults(results);
-        //         }
-        //         @Override public void onFailure(Call<List<Student>> call, Throwable t) {
-        //             progressBar.setVisibility(View.GONE);
-        //             Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
-        //         }
-        //     });
+        // Gọi API tìm kiếm đã viết bên Node.js
+        com.example.btl.network.RetrofitClient.getApiService().searchStudents(keyword).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<java.util.List<com.example.btl.models.Student>>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<java.util.List<com.example.btl.models.Student>>> call, retrofit2.Response<com.example.btl.network.ApiResponse<java.util.List<com.example.btl.models.Student>>> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    showResults(response.body().getData());
+                } else {
+                    showResults(new ArrayList<>());
+                }
+            }
 
-        // ---- Dữ liệu mẫu test giao diện ----
-        new android.os.Handler().postDelayed(() -> {
-            progressBar.setVisibility(View.GONE);
-            List<Student> sample = new ArrayList<>();
-            Student s = new Student();
-            s.setStudentId("A12345"); s.setFullName("Nguyễn Văn An");
-            s.setClassName("CNTT1"); s.setMajor("Công nghệ thông tin");
-            sample.add(s);
-            showResults(sample);
-        }, 800);
+            @Override
+            public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<java.util.List<com.example.btl.models.Student>>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showResults(List<Student> results) {

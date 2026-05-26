@@ -353,7 +353,7 @@
 
         <!-- View All Scores Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_view_all_scores"
+            android:id="@+id/tv_view_all_scores"
             style="@style/TL.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

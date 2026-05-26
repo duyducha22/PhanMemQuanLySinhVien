@@ -36,7 +36,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         h.tvId.setText(s.getStudentId());
         h.tvClass.setText(s.getClassName());
         h.tvMajor.setText(s.getMajor());
-        h.tvInitial.setText(s.getInitial());
+
+        // Trích xuất chữ cái đầu tiên của tên để làm Avatar
+        String fullName = s.getFullName();
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            h.tvInitial.setText(String.valueOf(fullName.trim().charAt(0)).toUpperCase());
+        } else {
+            h.tvInitial.setText("S"); // Mặc định nếu không có tên
+        }
+
         h.itemView.setOnClickListener(v -> listener.onStudentClick(s));
     }
 

@@ -1,7 +1,12 @@
 package com.example.btl.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Score {
-    private int    id;
+
+    @SerializedName("_id")
+    private String id; // Đổi từ int sang String và map với _id của MongoDB
+
     private String studentId;
     private String subjectCode;
     private String subjectName;
@@ -9,13 +14,13 @@ public class Score {
     private double midtermScore;
     private double finalScore;
     private double averageScore;
-    private String grade;       // A, B, C, D, F
-    private String semester;    // VD: "HK1 2023-2024"
+    private String grade;
+    private String semester;
 
     public Score() {}
 
     // Getters
-    public int    getId()           { return id; }
+    public String getId()           { return id; } // Đổi kiểu trả về thành String
     public String getStudentId()    { return studentId; }
     public String getSubjectCode()  { return subjectCode; }
     public String getSubjectName()  { return subjectName; }
@@ -27,7 +32,7 @@ public class Score {
     public String getSemester()     { return semester; }
 
     // Setters
-    public void setId(int id)                       { this.id = id; }
+    public void setId(String id)                       { this.id = id; }
     public void setStudentId(String studentId)      { this.studentId = studentId; }
     public void setSubjectCode(String subjectCode)  { this.subjectCode = subjectCode; }
     public void setSubjectName(String subjectName)  { this.subjectName = subjectName; }

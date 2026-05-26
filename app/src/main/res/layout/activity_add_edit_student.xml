@@ -33,7 +33,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Personal Info Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +58,6 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Student ID -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_student_id"
                         style="@style/TL.TextInput"
@@ -78,7 +76,6 @@
                             android:maxLength="6"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Full name -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_name"
                         style="@style/TL.TextInput"
@@ -94,7 +91,6 @@
                             android:inputType="textPersonName|textCapWords"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Date of birth -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_dob"
                         style="@style/TL.TextInput"
@@ -115,7 +111,6 @@
                             android:clickable="true"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Gender -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -138,8 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nam"
-                            app:chipBackgroundColor="@color/gray_100"
-                            app:checkedBackgroundColor="@color/tl_primary"
+                            app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
                             app:chipStrokeWidth="1dp"/>
 
@@ -149,13 +143,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nữ"
-                            app:chipBackgroundColor="@color/gray_100"
-                            app:checkedBackgroundColor="@color/tl_primary"
+                            app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
                             app:chipStrokeWidth="1dp"/>
                     </com.google.android.material.chip.ChipGroup>
 
-                    <!-- Email -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_email"
                         style="@style/TL.TextInput"
@@ -171,7 +163,6 @@
                             android:inputType="textEmailAddress"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Phone -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_phone"
                         style="@style/TL.TextInput"
@@ -187,7 +178,6 @@
                             android:inputType="phone"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Address -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_address"
                         style="@style/TL.TextInput"
@@ -207,7 +197,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Academic Info Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -232,7 +221,6 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Class -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_class"
                         style="@style/TL.TextInput"
@@ -248,7 +236,6 @@
                             android:inputType="textCapCharacters"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Major -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_major"
                         style="@style/TL.TextInput"
@@ -264,7 +251,6 @@
                             android:inputType="textCapSentences"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Academic year -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_form_year"
                         style="@style/TL.TextInput"
@@ -281,7 +267,6 @@
                             android:maxLength="4"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Status -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -303,8 +288,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Đang học"
-                            app:chipBackgroundColor="@color/gray_100"
-                            app:checkedBackgroundColor="@color/tl_primary"
+                            app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
                             app:chipStrokeWidth="1dp"/>
 
@@ -314,8 +298,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Tốt nghiệp"
-                            app:chipBackgroundColor="@color/gray_100"
-                            app:checkedBackgroundColor="@color/tl_primary"
+                            app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
                             app:chipStrokeWidth="1dp"/>
 
@@ -325,15 +308,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Đình chỉ"
-                            app:chipBackgroundColor="@color/gray_100"
-                            app:checkedBackgroundColor="@color/error"
+                            app:chipBackgroundColor="@color/selector_chip_error"
                             app:chipStrokeColor="@color/error"
                             app:chipStrokeWidth="1dp"/>
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Action Buttons -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_student"
                 style="@style/TL.Button"

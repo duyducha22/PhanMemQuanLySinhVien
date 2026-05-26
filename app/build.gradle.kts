@@ -43,4 +43,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
+
+    // Thư viện Retrofit để gọi API mạng
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Thư viện Gson giúp dịch dữ liệu JSON từ Node.js sang Java
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 }

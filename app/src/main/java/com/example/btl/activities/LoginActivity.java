@@ -73,14 +73,37 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!valid) return;
 
-        // TODO: Thay bằng gọi API thực
-        // ApiService api = RetrofitClient.getApiService();
-        // api.login(id, pwd).enqueue(...);
+        // Đóng gói dữ liệu gửi lên API
+        java.util.Map<String, String> credentials = new java.util.HashMap<>();
+        credentials.put("username", id);
+        credentials.put("password", pwd);
 
-        // ---- Test giao diện (xóa khi có API) ----
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("student_id", id);
-        startActivity(intent);
-        finish();
+        // Gọi API Đăng nhập
+        com.example.btl.network.RetrofitClient.getApiService().login(credentials).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.btl.network.ApiResponse<com.example.btl.models.Student> apiResponse = response.body();
+
+                    // Kiểm tra nếu đúng là sinh viên thì cho vào
+                    if (apiResponse.isSuccess() && "student".equals(apiResponse.getRole())) {
+                        android.widget.Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", android.widget.Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("student_id", id);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        tilPassword.setError("Tài khoản này không phải sinh viên!");
+                    }
+                } else {
+                    tilPassword.setError("Sai mã sinh viên hoặc mật khẩu");
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {
+                android.widget.Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

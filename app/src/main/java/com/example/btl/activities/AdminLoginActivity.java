@@ -52,11 +52,35 @@ public class AdminLoginActivity extends AppCompatActivity {
         if (pwd.isEmpty())  { tilPassword.setError("Nhập mật khẩu");       valid = false; }
         if (!valid) return;
 
-        // TODO: Gọi API xác thực admin
-        // RetrofitClient.getApiService().adminLogin(user, pwd).enqueue(...)
+        // Đóng gói dữ liệu gửi lên API
+        java.util.Map<String, String> credentials = new java.util.HashMap<>();
+        credentials.put("username", user);
+        credentials.put("password", pwd);
 
-        // ---- Test giao diện ----
-        startActivity(new Intent(this, AdminDashboardActivity.class));
-        finish();
+        // Gọi API Đăng nhập
+        com.example.btl.network.RetrofitClient.getApiService().login(credentials).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.btl.network.ApiResponse<com.example.btl.models.Student> apiResponse = response.body();
+
+                    // Kiểm tra nếu đúng quyền Admin thì mở cổng
+                    if (apiResponse.isSuccess() && "admin".equals(apiResponse.getRole())) {
+                        android.widget.Toast.makeText(AdminLoginActivity.this, "Xin chào Admin!", android.widget.Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(AdminLoginActivity.this, AdminDashboardActivity.class));
+                        finish();
+                    } else {
+                        tilPassword.setError("Tài khoản không có quyền quản trị!");
+                    }
+                } else {
+                    tilPassword.setError("Sai tên đăng nhập hoặc mật khẩu");
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {
+                android.widget.Toast.makeText(AdminLoginActivity.this, "Lỗi kết nối: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -2,12 +2,19 @@ package com.example.btl.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import androidx.annotation.*;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.example.btl.R;
 import com.example.btl.activities.LoginActivity;
+import com.example.btl.network.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
 
 public class ProfileFragment extends Fragment {
@@ -26,14 +33,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-            studentId = getArguments().getString(ARG_STUDENT_ID);
+        if (getArguments() != null) studentId = getArguments().getString(ARG_STUDENT_ID);
     }
 
-    @Nullable @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -46,37 +51,49 @@ public class ProfileFragment extends Fragment {
         TextView tvId      = view.findViewById(R.id.tv_profile_id);
         MaterialButton btnLogout = view.findViewById(R.id.btn_logout);
 
-        // TODO: Gọi API lấy thông tin & điền vào các row
-        // Tạm thời dùng dữ liệu mẫu
-        tvInitial.setText("A");
-        tvName.setText("Nguyễn Văn An");
-        tvId.setText(studentId != null ? studentId : "A12345");
+        tvId.setText(studentId != null ? studentId : "Đang tải...");
 
-        // Điền các hàng thông tin (item_profile_row)
-        setProfileRow(view, R.id.row_dob,     "Ngày sinh",    "01/01/2000");
-        setProfileRow(view, R.id.row_gender,   "Giới tính",    "Nam");
-        setProfileRow(view, R.id.row_email,    "Email",        "a12345@thanglong.edu.vn");
-        setProfileRow(view, R.id.row_phone,    "Điện thoại",   "0901234567");
-        setProfileRow(view, R.id.row_address,  "Địa chỉ",      "Hà Nội");
-        setProfileRow(view, R.id.row_class,    "Lớp",          "CNTT1");
-        setProfileRow(view, R.id.row_major,    "Ngành",        "Công nghệ thông tin");
-        setProfileRow(view, R.id.row_year,     "Năm nhập học", "2022");
+        // GỌI API LẤY THÔNG TIN CÁ NHÂN
+        if (studentId != null) {
+            RetrofitClient.getApiService().getStudentById(studentId).enqueue(new retrofit2.Callback<com.example.btl.network.ApiResponse<com.example.btl.models.Student>>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, retrofit2.Response<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        com.example.btl.models.Student s = response.body().getData();
+                        tvName.setText(s.getFullName());
+                        tvId.setText(s.getStudentId());
+                        if (s.getFullName() != null && !s.getFullName().isEmpty()) {
+                            tvInitial.setText(String.valueOf(s.getFullName().trim().charAt(0)).toUpperCase());
+                        }
 
+                        setProfileRow(view, R.id.row_dob,     "Ngày sinh",    s.getDob());
+                        setProfileRow(view, R.id.row_gender,   "Giới tính",    s.getGender());
+                        setProfileRow(view, R.id.row_email,    "Email",        s.getEmail());
+                        setProfileRow(view, R.id.row_phone,    "Điện thoại",   s.getPhone());
+                        setProfileRow(view, R.id.row_address,  "Địa chỉ",      s.getAddress());
+                        setProfileRow(view, R.id.row_class,    "Lớp",          s.getClassName());
+                        setProfileRow(view, R.id.row_major,    "Ngành",        s.getMajor());
+                        setProfileRow(view, R.id.row_year,     "Năm nhập học", String.valueOf(s.getEnrollmentYear()));
+                    }
+                }
+                @Override public void onFailure(retrofit2.Call<com.example.btl.network.ApiResponse<com.example.btl.models.Student>> call, Throwable t) {}
+            });
+        }
+
+        // Xử lý nút Đăng xuất
         btnLogout.setOnClickListener(v -> {
-            // Xóa session / SharedPreferences nếu cần
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
     }
 
-    // Hàm tiện ích điền label + value vào item_profile_row
     private void setProfileRow(View parent, int rowId, String label, String value) {
         View row = parent.findViewById(rowId);
         if (row == null) return;
         TextView tvLabel = row.findViewById(R.id.tv_label);
         TextView tvValue = row.findViewById(R.id.tv_value);
         if (tvLabel != null) tvLabel.setText(label);
-        if (tvValue != null) tvValue.setText(value);
+        if (tvValue != null) tvValue.setText(value != null && !value.isEmpty() ? value : "---");
     }
 }
