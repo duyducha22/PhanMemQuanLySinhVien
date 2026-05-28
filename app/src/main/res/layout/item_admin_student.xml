@@ -26,7 +26,7 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_header_gradient">
+                android:background="@drawable/bg_avatar_primary">
 
                 <TextView
                     android:id="@+id/tv_admin_item_initial"
@@ -36,7 +36,7 @@
                     android:text="N"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/tl_primary"/>
             </FrameLayout>
 
             <!-- Info -->
@@ -155,6 +155,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_delete_student"
+                style="@style/TL.Button.Text"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp"
@@ -162,6 +163,9 @@
                 android:textColor="@color/error"
                 android:text="Xóa"
                 android:textSize="13sp"
+                android:textStyle="bold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:cornerRadius="0dp"
                 app:rippleColor="#1AC62828"/>
 

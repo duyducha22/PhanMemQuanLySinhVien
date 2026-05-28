@@ -132,20 +132,22 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nam"
+                            android:text="♂  Nam"
                             app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
-                            app:chipStrokeWidth="1dp"/>
+                            app:chipStrokeWidth="1dp"
+                            android:textColor="@color/selector_chip_primary_text"/>
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chip_female"
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nữ"
+                            android:text="♀  Nữ"
                             app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
-                            app:chipStrokeWidth="1dp"/>
+                            app:chipStrokeWidth="1dp"
+                            android:textColor="@color/selector_chip_primary_text"/>
                     </com.google.android.material.chip.ChipGroup>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -290,7 +292,8 @@
                             android:text="Đang học"
                             app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
-                            app:chipStrokeWidth="1dp"/>
+                            app:chipStrokeWidth="1dp"
+                            android:textColor="@color/selector_chip_primary_text"/>
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chip_graduated"
@@ -300,7 +303,8 @@
                             android:text="Tốt nghiệp"
                             app:chipBackgroundColor="@color/selector_chip_primary"
                             app:chipStrokeColor="@color/tl_primary"
-                            app:chipStrokeWidth="1dp"/>
+                            app:chipStrokeWidth="1dp"
+                            android:textColor="@color/selector_chip_primary_text"/>
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chip_suspended"
@@ -310,7 +314,8 @@
                             android:text="Đình chỉ"
                             app:chipBackgroundColor="@color/selector_chip_error"
                             app:chipStrokeColor="@color/error"
-                            app:chipStrokeWidth="1dp"/>
+                            app:chipStrokeWidth="1dp"
+                            android:textColor="@color/selector_chip_error_text"/>
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
